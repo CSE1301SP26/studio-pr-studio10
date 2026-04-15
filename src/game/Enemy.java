@@ -9,7 +9,9 @@ public class Enemy extends Entity {
     private long lastFired;
 
     public Enemy() {
-        super(Math.random() * 0.9, Math.random() * 0.8 + 0.15, 0.03, Color.RED);
+        double positionX = Math.random() * 0.9;
+        double positionY = Math.random() * 0.8 + 0.15;
+        super(positionX, positionY, 0.03, Color.RED);
         xSpeed = Math.random() * 0.05;
         ySpeed = Math.random() * 0.05;
         lastFired = System.currentTimeMillis();
@@ -22,23 +24,18 @@ public class Enemy extends Entity {
     }
 
     private void bounceOffWall() {
-        if(this.getXPosition() < 0) {
+        if(this.getXPosition() < 0 || this.getXPosition() > 1) {
             xSpeed = -xSpeed;
         }
-        if(this.getXPosition() > 1) {
-            xSpeed = -xSpeed;
-        }
-        if(this.getYPosition() > 1) {
-            ySpeed = -ySpeed;
-        }
-        if(this.getYPosition() < 0.15) {
+        if(this.getYPosition() > 1 || this.getYPosition() < 0.15) {
             ySpeed = -ySpeed;
         }
     }
 
     public boolean isFiring() {
         long now = System.currentTimeMillis();
-        if(now - lastFired > 1000) {
+        int timeGap = 1000;
+        if(now - lastFired > timeGap) {
             lastFired = now;
             return true;
         } else {

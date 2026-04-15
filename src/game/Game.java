@@ -31,9 +31,11 @@ public class Game {
             initializeLevel();
             boolean gameOver = false;
             while(gameOver == false) {
-                updatePositions();
+                moveDown();
+                moveUp();
                 fireProjectiles();
                 gameOver = checkCollisions();
+                addScore();
                 if(enemies.size() == 0) {
                     numberOfEnemies++;
                     initializeLevel();
@@ -48,13 +50,13 @@ public class Game {
         enemyProjectiles.clear();
         playerProjectiles.clear();
         enemies.clear();
-        for(int i = 0; i < numberOfEnemies; i++) {
+        for(Enemy i : enemies);
             Enemy e = new Enemy();
             enemies.add(e);
         }  
-    }
+    
 
-    private void updatePositions() {
+    private void moveDown() {
         for(int i = 0; i < enemyProjectiles.size(); i++) {
             Projectile p = enemyProjectiles.get(i);
             p.moveDown();
@@ -62,7 +64,14 @@ public class Game {
                 enemyProjectiles.remove(p);
             }
         }
+        for(Enemy i : enemies) {
+            i.move();
+        }
 
+        player.move();
+    }
+
+    private void moveUp() {
         for(int i = 0; i < playerProjectiles.size(); i++) {
             Projectile p = playerProjectiles.get(i);
             p.moveUp();
@@ -71,19 +80,17 @@ public class Game {
             }
         }
 
-        for(int i = 0; i < enemies.size(); i++) {
-            Enemy e = enemies.get(i);
-            e.move();
+        for(Enemy i : enemies) {
+            i.move();
         }
 
         player.move();
     }
 
     private void fireProjectiles() {
-        for(int i = 0; i < enemies.size(); i++) {
-            Enemy e = enemies.get(i);
-            if(e.isFiring() == true) {
-                Projectile p = new Projectile(e.getXPosition(), e.getYPosition() - e.getSize(), Color.RED);
+        for(Enemy i : enemies) {
+            if(i.isFiring() == true) {
+                Projectile p = new Projectile(i.getXPosition(), i.getYPosition() - i.getSize(), Color.RED);
                 enemyProjectiles.add(p);
             }
             
@@ -95,6 +102,16 @@ public class Game {
     }
 
     private boolean checkCollisions() {
+        for(int i = 0; i < enemyProjectiles.size(); i++) {
+            Projectile p = enemyProjectiles.get(i);
+            if(p.collidesWith(player)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void addScore() {
         for(int i = 0; i < playerProjectiles.size(); i++) {
             Projectile p = playerProjectiles.get(i);
             for(int j = 0; j < enemies.size(); j++) {
@@ -106,14 +123,6 @@ public class Game {
                 }
             }
         }
-
-        for(int i = 0; i < enemyProjectiles.size(); i++) {
-            Projectile p = enemyProjectiles.get(i);
-            if(p.collidesWith(player)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private void draw() {

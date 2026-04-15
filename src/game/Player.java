@@ -15,23 +15,21 @@ public class Player extends Entity {
     }
 
     public void move() {
+        double size = 0.01;
         if (StdDraw.isKeyPressed(KeyEvent.VK_A)) {
-            setXPosition(this.getXPosition() - 0.01);
+            setXPosition(this.getXPosition() - size);
         }
         if (StdDraw.isKeyPressed(KeyEvent.VK_D)) {
-            setXPosition(this.getXPosition() + 0.01);
+            setXPosition(this.getXPosition() + size);
         }
     }
 
     public boolean isFiring() {
         long now = System.currentTimeMillis();
-        if (now - lastFired > 500) {
-            if (StdDraw.isKeyPressed(KeyEvent.VK_SPACE)) {
-                lastFired = now;
-                return true;
-            } else {
-                return false;
-            }
+        int timeGap = 500;
+        if (now - lastFired > timeGap && StdDraw.isKeyPressed(KeyEvent.VK_SPACE)) {
+            lastFired = now;
+            return true;
         } else {
             return false;
         }
